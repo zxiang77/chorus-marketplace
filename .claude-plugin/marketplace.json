@@ -1,0 +1,16 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "chorus-marketplace",
+  "description": "Chorus — route a single Discord bot to multiple Claude Code sessions",
+  "owner": {
+    "name": "zxiang77"
+  },
+  "plugins": [
+    {
+      "name": "chorus-relay",
+      "description": "MCP channel server that bridges the Chorus Hub to a Claude Code session. One relay per Discord channel.",
+      "category": "productivity",
+      "source": "./external_plugins/chorus-relay"
+    }
+  ]
+}
