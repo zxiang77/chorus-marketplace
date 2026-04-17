@@ -1,0 +1,12 @@
+{
+  "name": "chorus-relay",
+  "description": "Chorus Relay — MCP channel server that routes a Discord channel through the Chorus Hub into the current Claude Code session.",
+  "version": "0.2.0",
+  "keywords": [
+    "chorus",
+    "discord",
+    "messaging",
+    "channel",
+    "mcp"
+  ]
+}

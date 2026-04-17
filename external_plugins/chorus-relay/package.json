@@ -1,0 +1,14 @@
+{
+  "name": "chorus-relay",
+  "version": "0.2.0",
+  "description": "MCP channel server relay for Chorus — routes Discord messages to Claude Code sessions",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "start": "bun install --no-summary && bun relay.ts",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  }
+}
