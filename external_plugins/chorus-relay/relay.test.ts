@@ -291,6 +291,44 @@ describe("Relay MCP Channel Server", () => {
     }
   });
 
+  // Test 4b: Reply tool forwards `files` (attachments) to the Hub, and the
+  // reply schema declares `files` so the MCP client doesn't strip it.
+  test("reply tool forwards files[] to Hub and schema declares files", async () => {
+    const channelId = "test-channel-reply-files";
+    const relay = await createRelay({
+      channelId,
+      hubUrl: `http://127.0.0.1:${hubPort}`,
+      secret: MOCK_SECRET,
+    });
+
+    try {
+      hubRequests.length = 0;
+      const result = await relay.callTool("reply", {
+        chat_id: channelId,
+        text: "here is a screenshot",
+        files: ["/tmp/shot.png", "/tmp/shot2.png"],
+      });
+
+      const replyReq = hubRequests.find(
+        (r) => r.path === "/reply" && r.method === "POST",
+      );
+      expect(replyReq).toBeDefined();
+      const body = replyReq!.body as { files?: string[] };
+      expect(body.files).toEqual(["/tmp/shot.png", "/tmp/shot2.png"]);
+      expect(result.isError).toBeFalsy();
+
+      // The schema must declare `files` (array) — otherwise the MCP client
+      // strips the arg before it reaches the handler (the bug we fixed).
+      const replySchema = relay
+        .listTools()
+        .find((t) => t.name === "reply")!.inputSchema;
+      expect(replySchema.properties.files).toBeDefined();
+      expect(replySchema.properties.files.type).toBe("array");
+    } finally {
+      await relay.close();
+    }
+  });
+
   // Test 6: listTools() returns correct schemas for all 4 MCP tools
   test("listTools returns schemas for reply, react, edit_message, fetch_messages", async () => {
     const relay = await createRelay({
