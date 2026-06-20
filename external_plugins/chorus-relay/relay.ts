@@ -61,7 +61,10 @@ type ToolSchema = {
   description: string;
   inputSchema: {
     type: "object";
-    properties: Record<string, { type: string; description?: string }>;
+    properties: Record<
+      string,
+      { type: string; description?: string; items?: { type: string } }
+    >;
     required: string[];
   };
 };
@@ -181,13 +184,18 @@ async function handleFetchMessages(
 const TOOL_SCHEMAS: ToolSchema[] = [
   {
     name: "reply",
-    description: "Send a message to the Discord channel",
+    description: "Send a message to the Discord channel. Attach images/files with `files` (array of absolute local paths) — they upload as native Discord attachments.",
     inputSchema: {
       type: "object",
       properties: {
         chat_id: { type: "string", description: "Channel ID to send the reply to" },
         text: { type: "string", description: "Message text to send" },
         reply_to: { type: "string", description: "Message ID to reply to (optional)" },
+        files: {
+          type: "array",
+          items: { type: "string" },
+          description: "Optional list of absolute local file paths to attach (e.g. PNG/JPG screenshots). Uploaded as native Discord attachments via the hub — no third-party host.",
+        },
       },
       required: ["chat_id", "text"],
     },
